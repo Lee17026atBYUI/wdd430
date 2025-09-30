@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, Input, signal } from '@angular/core';
 
 @Component({
   selector: 'cms-root',
@@ -8,4 +8,10 @@ import { Component, signal } from '@angular/core';
 })
 export class App {
   protected readonly title = signal('cms');
+
+  selectedFeature: string = 'documents';
+
+  switchView(selectedFeature: string) {
+    this.selectedFeature = selectedFeature;
+  }
 }
