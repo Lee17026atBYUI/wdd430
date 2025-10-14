@@ -19,13 +19,9 @@ export class ContactList {
   ngOnInit() {
     this.contacts = this.contactService.getContacts();
   }
-
-  // these emitters let us send data to the parent component
-  @Output() selectedContactEvent = new EventEmitter<Contact>();
-  // the parent component html must listen for this event
   
   // we also need a method to then fire this emitter
   onSelected(contact: Contact) {
-    this.selectedContactEvent.emit(contact);
+    this.contactService.contactSelectedEvent.emit(contact);
   }
 }
