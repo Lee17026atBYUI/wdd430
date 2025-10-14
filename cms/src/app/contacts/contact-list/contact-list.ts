@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 
 import { Contact } from '../contact.model';
+import { ContactService } from '../contact.service';
 
 @Component({
   selector: 'cms-contact-list',
@@ -9,10 +10,15 @@ import { Contact } from '../contact.model';
   styleUrl: './contact-list.css'
 })
 export class ContactList {
-  contacts: Contact[] = [
-    new Contact(1, 'R. Kent Jackson', 'jacksonk@byui.edu', '208-123-2356', 'assets/images/jacksonk.jpg', null),
-    new Contact(2, 'Rex Barzee', 'barzeer@byui.edu', '208-356-4353', 'assets/images/barzeer.jpg', null)
-  ];
+  contacts: Contact[] = [];
+
+  constructor(private contactService: ContactService) {
+
+  }
+
+  ngOnInit() {
+    this.contacts = this.contactService.getContacts();
+  }
 
   // these emitters let us send data to the parent component
   @Output() selectedContactEvent = new EventEmitter<Contact>();
