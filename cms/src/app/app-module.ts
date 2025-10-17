@@ -15,6 +15,8 @@ import { MessageItem } from './messages/message-item/message-item';
 import { MessageEdit } from './messages/message-edit/message-edit';
 import { MessageList } from './messages/message-list/message-list';
 import { DropdownDirective } from './shared/dropdown.directive';
+import { NotFound } from './not-found/not-found';
+import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
   declarations: [
@@ -31,10 +33,12 @@ import { DropdownDirective } from './shared/dropdown.directive';
     MessageItem,
     MessageEdit,
     MessageList,
-    DropdownDirective
+    DropdownDirective,
+    NotFound
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    AppRoutingModule
   ],
   providers: [
     provideBrowserGlobalErrorListeners()
