@@ -17,6 +17,8 @@ import { MessageList } from './messages/message-list/message-list';
 import { DropdownDirective } from './shared/dropdown.directive';
 import { NotFound } from './not-found/not-found';
 import { AppRoutingModule } from './app-routing.module';
+import { DocumentEdit } from './documents/document-edit/document-edit';
+import { ContactEdit } from './contacts/contact-edit/contact-edit';
 
 @NgModule({
   declarations: [
@@ -34,7 +36,9 @@ import { AppRoutingModule } from './app-routing.module';
     MessageEdit,
     MessageList,
     DropdownDirective,
-    NotFound
+    NotFound,
+    DocumentEdit,
+    ContactEdit
   ],
   imports: [
     BrowserModule,

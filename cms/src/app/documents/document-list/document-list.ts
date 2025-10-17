@@ -10,16 +10,17 @@ import { DocumentService } from '../document.service';
   styleUrl: './document-list.css'
 })
 export class DocumentList {
-
   documents: Document[] = [];
 
   constructor(private documentService: DocumentService) {}
 
   ngOnInit() {
     this.documents = this.documentService.getDocuments();
-  }
 
-  onSelectedDocument(document: Document) {
-    this.documentService.documentSelectedEvent.emit(document);
+    this.documentService.documentChangedEvent.subscribe(
+      (documents: Document[]) => {
+        this.documents = documents;
+      }
+    );
   }
 }

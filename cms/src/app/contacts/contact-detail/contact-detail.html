@@ -4,10 +4,10 @@
     <div class="pull-left">
       <img src="{{ contact.imageUrl }}" alt="{{ contact.name }}" class="img-responsive" style="max-height: 50px;">
     </div>
-    <a href="#" class="pull-right">
-      <button class="btn btn-primary">Edit</button>
-      <button class="btn btn-danger">Delete</button>
-    </a>
+    <div class="pull-right">
+      <a class="btn btn-primary" routerLink="edit">Edit</a>
+      <a class="btn btn-danger" (click)="onDelete()">Delete</a>
+    </div>
   </div>
   <div class="panel-body">
     <p><strong>Email:</strong> {{contact.email}}</p>

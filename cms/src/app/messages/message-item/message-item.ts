@@ -18,6 +18,6 @@ export class MessageItem {
 
   ngOnInit() {
     const contact: Contact = this.contactService.getContact(this.message.sender);
-    this.messageSender = contact?.name;
+    this.messageSender = contact?.name ?? '[Sender Deleted]';
   }
 }
