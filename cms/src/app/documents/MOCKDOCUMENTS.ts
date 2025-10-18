@@ -52,6 +52,7 @@ export const MOCKDOCUMENTS: any[] = [
   {
     id: '10',
     name: 'CIT 460 - Enterprise Development',
+    description: 'Check this bad boy out.',
     url: 'https://rkjackson.wordpress.com/',
     children: [
       {id: '12', name: 'Case 1 – Defining the requirements', url: 'https://rkjackson.wordpress.com/cases/case-1/'},

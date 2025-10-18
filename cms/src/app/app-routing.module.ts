@@ -23,7 +23,8 @@ const appRoutes: Routes = [
     {path: ':id', component: ContactDetail},
     {path: ':id/edit', component: ContactEdit},
   ]},
-  {path: '**', component: NotFound},
+  {path: '404', component: NotFound},
+  {path: '**', redirectTo: '/404'},
 ];
 
 @NgModule({

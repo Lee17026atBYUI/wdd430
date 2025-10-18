@@ -9,10 +9,13 @@
       <div class="panel-body">
         <div class="row">
           <div class="col-xs-12">
-            <cms-message-item
+            @for (message of messages; track message.id) {
+              <cms-message-item [message]="message"></cms-message-item>
+            }
+            <!-- <cms-message-item
             *ngFor="let messageEl of messages"
             [message]="messageEl"
-            ></cms-message-item>
+            ></cms-message-item> -->
           </div>
         </div>
       </div>

@@ -7,10 +7,13 @@
   </div>
   <div class="panel-body">
     <div class="center-panel">
-      <cms-document-item
+      @for (document of documents; track document.id) {
+        <cms-document-item [document]="document"></cms-document-item>
+      }
+      <!-- <cms-document-item
       *ngFor="let document of documents"
       [document]="document"
-      ></cms-document-item>
+      ></cms-document-item> -->
     </div>
   </div>
 
