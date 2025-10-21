@@ -1,4 +1,5 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 
 import { Message } from './message.model';
 import { MOCKMESSAGES } from './MOCKMESSAGES';
@@ -8,10 +9,13 @@ import { MOCKMESSAGES } from './MOCKMESSAGES';
 })
 export class MessageService {
   private messages: Message[];
-  messageChangedEvent = new EventEmitter<Message[]>();
+  messageChangedEvent = new Subject<Message[]>();
+  private maxMessageId: number;
 
   constructor() {
     this.messages = MOCKMESSAGES;
+
+    this.maxMessageId = this.getMaxId();
   }
 
   getMessages(): Message[] {
@@ -23,12 +27,31 @@ export class MessageService {
       if (message.id == id) {
         return message;
       }
-    };
+    }
     return null;
   }
 
   addMessage(message: Message) {
+    if (message == null) {
+      return;
+    }
+
+    this.maxMessageId++;
+    message.id = this.maxMessageId.toString();
     this.messages.push(message);
-    this.messageChangedEvent.emit(this.messages.slice());
+    this.messageChangedEvent.next(this.messages.slice());
+  }
+
+  getMaxId(): number {
+    let maxId = 0;
+
+    this.messages.forEach((message: Message) => {
+      let currentId = +message.id;
+      if (currentId > maxId) {
+        maxId = currentId;
+      }
+    });
+
+    return maxId;
   }
 }

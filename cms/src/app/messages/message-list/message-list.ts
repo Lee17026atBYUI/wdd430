@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { Message } from '../message.model';
 import { MessageService } from '../message.service';
@@ -9,7 +9,7 @@ import { MessageService } from '../message.service';
   templateUrl: './message-list.html',
   styleUrl: './message-list.css'
 })
-export class MessageList {
+export class MessageList implements OnInit {
   messages: Message[] = [];
 
   constructor(private messageService: MessageService) {}

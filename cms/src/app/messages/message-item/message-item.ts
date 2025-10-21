@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 import { Message } from '../message.model';
 import { ContactService } from '../../contacts/contact.service';
@@ -10,7 +10,7 @@ import { Contact } from '../../contacts/contact.model';
   templateUrl: './message-item.html',
   styleUrl: './message-item.css',
 })
-export class MessageItem {
+export class MessageItem implements OnInit {
   @Input() message: Message;
   messageSender: string;
 

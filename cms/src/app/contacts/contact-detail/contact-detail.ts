@@ -1,8 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 
 import { Contact } from '../contact.model';
 import { ContactService } from '../contact.service';
-import { ActivatedRoute, Params, Router } from '@angular/router';
 
 @Component({
   selector: 'cms-contact-detail',
@@ -10,7 +10,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
   templateUrl: './contact-detail.html',
   styleUrl: './contact-detail.css'
 })
-export class ContactDetail {
+export class ContactDetail implements OnInit {
   contact: Contact;
   private contactService = inject(ContactService);
   private router = inject(Router);

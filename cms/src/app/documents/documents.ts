@@ -10,16 +10,5 @@ import { DocumentService } from './document.service';
   styleUrl: './documents.css'
 })
 export class Documents {
-  // selectedDocument: Document;
-
-  // constructor(private documentService: DocumentService) {}
-
-  ngOnInit() {
-    // this.documentService.documentSelectedEvent.subscribe(
-    //   (document: Document) => {
-    //     this.selectedDocument = document;
-    //   }
-    // );
-  }
 
 }
