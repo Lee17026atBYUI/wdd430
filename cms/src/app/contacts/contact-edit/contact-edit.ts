@@ -7,5 +7,10 @@ import { Component } from '@angular/core';
   styleUrl: './contact-edit.css'
 })
 export class ContactEdit {
+  groupContacts;
+
+  onCancel() {
+    
+  }
 
 }

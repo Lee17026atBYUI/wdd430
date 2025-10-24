@@ -79,6 +79,11 @@ export class DocumentService {
 
     newDocument.id = originalDocument.id;
     this.documents[pos] = newDocument;
+    // this.documentListChangedEvent.next(this.documents.slice());
+    this.listChanged();
+  }
+  
+  private listChanged() {
     this.documentListChangedEvent.next(this.documents.slice());
   }
 }

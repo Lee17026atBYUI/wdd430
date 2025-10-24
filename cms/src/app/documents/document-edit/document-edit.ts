@@ -1,4 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+
+import { Document } from '../document.model';
+import { DocumentService } from '../document.service';
 
 @Component({
   selector: 'cms-document-edit',
@@ -6,6 +11,57 @@ import { Component } from '@angular/core';
   templateUrl: './document-edit.html',
   styleUrl: './document-edit.css'
 })
-export class DocumentEdit {
+export class DocumentEdit implements OnInit, OnDestroy {
+  originalDocument: Document;
+  document: Document;
+  editMode: boolean = false;
+
+  private documentService = inject(DocumentService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+
+  onCancel() {
+    this.router.navigate(['/documents']);
+  }
+
+  onSubmit(form: NgForm) {
+    const value = form.value;
+    const newDocument = new Document(null, value.name, value.description, value.url, null);
+
+    if (this.editMode) {
+      this.documentService.updateDocument(this.originalDocument, newDocument);
+    } else {
+      this.documentService.addDocument(newDocument);
+    }
+
+    this.onCancel();
+  }
+
+  ngOnInit(): void {
+    this.route.params.subscribe(
+      (params: Params) => {
+        const id = params['id'];
+
+        // check if we even got an id (we won't for new document mode)
+        if (id == null) {
+          this.editMode = false;
+          return;
+        }
+
+        this.originalDocument = this.documentService.getDocument(id);
+
+        // check if they passed in a fake id
+        if (this.originalDocument == null) return;
+
+        this.editMode = true;
+        this.document = {...this.originalDocument}; // I think this means clone?
+      }
+    );
+    
+  }
+
+  ngOnDestroy(): void {
+    
+  }
 
 }
