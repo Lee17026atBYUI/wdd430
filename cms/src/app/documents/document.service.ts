@@ -40,7 +40,7 @@ export class DocumentService {
       return;
     }
     this.documents.splice(pos, 1);
-    this.documentListChangedEvent.next(this.documents.slice());
+    this.listChanged();
   }
 
   getMaxId(): number {
@@ -64,7 +64,7 @@ export class DocumentService {
     this.maxDocumentId++;
     newDocument.id = this.maxDocumentId.toString();
     this.documents.push(newDocument);
-    this.documentListChangedEvent.next(this.documents.slice());
+    this.listChanged();
   }
 
   updateDocument(originalDocument: Document, newDocument: Document) {
@@ -79,7 +79,6 @@ export class DocumentService {
 
     newDocument.id = originalDocument.id;
     this.documents[pos] = newDocument;
-    // this.documentListChangedEvent.next(this.documents.slice());
     this.listChanged();
   }
   

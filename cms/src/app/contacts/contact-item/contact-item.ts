@@ -11,4 +11,5 @@ import { Contact } from '../contact.model';
 export class ContactItem {
   // this @Input() decorator means the parent component can bind this property
   @Input() contact: Contact;
+  @Input() isGroupContact = false;
 }

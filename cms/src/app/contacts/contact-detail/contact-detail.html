@@ -12,5 +12,11 @@
   <div class="panel-body">
     <p><strong>Email:</strong> {{contact.email}}</p>
     <p><strong>Phone:</strong> {{contact.phone}}</p>
+    @if (contact.group) {
+      <p><strong>Contacts in Team:</strong></p>
+      @for (groupContact of contact.group; track groupContact.id) {
+        <cms-contact-item [contact]="groupContact" [isGroupContact]="true"></cms-contact-item>
+      }
+    }
   </div>
 </div>
