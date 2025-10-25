@@ -37,13 +37,19 @@ export class ContactEdit implements OnInit {
         if (this.originalContact == null) return;
 
         this.editMode = true;
-        this.contact = {...this.originalContact};
+        // this.contact = JSON.parse(JSON.stringify(this.originalContact));
+        this.contact = this.cloneObject(this.originalContact);
 
         if (this.contact.group) {
-          this.groupContacts = [...this.contact.group];
+          // this.groupContacts = JSON.parse(JSON.stringify(this.contact.group));
+          this.groupContacts = this.cloneObject(this.contact.group);
         }
       }
     );
+  }
+
+  private cloneObject(object) {
+    return JSON.parse(JSON.stringify(object));
   }
 
   onCancel() {

@@ -54,7 +54,8 @@ export class DocumentEdit implements OnInit, OnDestroy {
         if (this.originalDocument == null) return;
 
         this.editMode = true;
-        this.document = {...this.originalDocument}; // I think this means clone?
+        // copying objects with the spread operator ... is a deep copy at the first level but a shallow copy for nested objects
+        this.document = JSON.parse(JSON.stringify(this.originalDocument));
       }
     );
     
