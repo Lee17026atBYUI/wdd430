@@ -7,11 +7,10 @@
   </div>
   <div class="panel-body">
     @for (contact of contacts; track contact.id) {
-      <cms-contact-item [contact]="contact"></cms-contact-item>
+      <cms-contact-item 
+      [contact]="contact" 
+      [dndDraggable]="contact"
+      ></cms-contact-item>
     }
-    <!-- <cms-contact-item
-    *ngFor="let contactEl of contacts"
-    [contact]="contactEl"
-    ></cms-contact-item> -->
   </div>
 </div>

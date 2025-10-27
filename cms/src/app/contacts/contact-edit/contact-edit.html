@@ -20,7 +20,7 @@
       <div class="row">
         <div class="col-sm-12 form-group">
           <label for="email">Email:</label>
-          <!-- pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" -->
+          <!-- pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" this be the original-->
           <input
           name="email"
           [ngModel]="contact?.email"
@@ -75,15 +75,20 @@
       <div class="row">
         <div class="col-sm-12 form-group">
           <label for="groupList">Group Contacts:</label>
+          @if (invalidGroupContactAdd) {
+            <div class="alert alert-danger">Contact can not be added to the group. It is already in the group or is the current contact.</div>
+          }
 
           <div class="row" id="groupList"
-              style="min-height: 3rem;" >
+              style="min-height: 3rem;" 
+              dndDropzone
+              (dndDrop)="onDrop($event)"
+              >
 
             <div *ngFor="let contact of groupContacts; let i = index">
-            <!-- <div *ngFor="let contact of contact?.group; let i = index"> -->
               <div>
                 <cms-contact-item class="col-sm-11" [contact]="contact" [isGroupContact]="true"></cms-contact-item>
-                <button class="btn btn-danger col-sm-2 deleteButton" (click)="onRemoveItem(i)">X</button>
+                <button class="btn btn-danger col-sm-2 deleteButton" (click)="onRemoveItem(i)" type="button">X</button>
               </div>
             </div>
             <span class="dragMsg" *ngIf="groupContacts?.length < 1">Drag contacts in group here</span>

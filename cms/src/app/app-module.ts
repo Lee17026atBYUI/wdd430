@@ -1,6 +1,7 @@
 import { NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
+import { DndModule } from 'ngx-drag-drop';
 
 import { App } from './app';
 import { Header } from './header';
@@ -44,7 +45,8 @@ import { ContactEdit } from './contacts/contact-edit/contact-edit';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    DndModule
   ],
   providers: [
     provideBrowserGlobalErrorListeners()
