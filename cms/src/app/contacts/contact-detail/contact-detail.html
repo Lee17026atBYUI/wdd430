@@ -1,8 +1,8 @@
 <div class="panel panel-default">
   <div class="panel-heading" style="height: 105px">
-    <h4 style="margin-top: 5px;">{{contact.name}}</h4>
+    <h4 style="margin-top: 5px;">{{contact?.name}}</h4>
     <div class="pull-left">
-      <img src="{{ contact.imageUrl }}" alt="{{ contact.name }}" class="img-responsive" style="max-height: 50px;">
+      <img src="{{ contact?.imageUrl }}" alt="{{ contact?.name }}" class="img-responsive" style="max-height: 50px;">
     </div>
     <div class="pull-right">
       <a class="btn btn-primary" routerLink="edit">Edit</a>
@@ -10,9 +10,9 @@
     </div>
   </div>
   <div class="panel-body">
-    <p><strong>Email:</strong> {{contact.email}}</p>
-    <p><strong>Phone:</strong> {{contact.phone}}</p>
-    @if (contact.group) {
+    <p><strong>Email:</strong> {{contact?.email}}</p>
+    <p><strong>Phone:</strong> {{contact?.phone}}</p>
+    @if (contact?.group) {
       <p><strong>Contacts in Team:</strong></p>
       @for (groupContact of contact.group; track groupContact.id) {
         <cms-contact-item [contact]="groupContact" [isGroupContact]="true"></cms-contact-item>

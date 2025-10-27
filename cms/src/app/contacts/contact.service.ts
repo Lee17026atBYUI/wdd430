@@ -1,13 +1,15 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 
 import { Contact } from './contact.model';
 import { MOCKCONTACTS } from './MOCKCONTACTS';
+import { FirebaseService } from '../shared/firebase.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ContactService {
+  private firebaseService = inject(FirebaseService);
   contacts: Contact[] = [];
   contactListChangedEvent = new Subject<Contact[]>();
   private maxContactId: number;
@@ -18,8 +20,22 @@ export class ContactService {
     this.maxContactId = this.getMaxId();
   }
 
-  getContacts(): Contact[] {
-    return this.contacts.slice();
+  getContacts() {
+    this.firebaseService.get<Contact[]>('contacts').subscribe(
+      (contacts: Contact[]) => {
+        this.contacts = contacts;
+        this.maxContactId = this.getMaxId();
+        this.contactListChangedEvent.next(this.contacts.slice());
+      },
+      (error: any) => {
+        console.log(error);
+      }
+    );
+  }
+
+  storeContacts() {
+    this.firebaseService.put('contacts', this.contacts);
+    this.contactListChangedEvent.next(this.contacts.slice());
   }
 
   getContact(id: string): Contact | null {
@@ -40,7 +56,7 @@ export class ContactService {
       return;
     }
     this.contacts.splice(pos, 1);
-    this.contactListChangedEvent.next(this.contacts.slice());
+    this.storeContacts();
   }
 
   getMaxId(): number {
@@ -64,7 +80,7 @@ export class ContactService {
     this.maxContactId++;
     newContact.id = this.maxContactId.toString();
     this.contacts.push(newContact);
-    this.contactListChangedEvent.next(this.contacts.slice());
+    this.storeContacts();
   }
 
   updateContact(originalContact: Contact, newContact: Contact) {
@@ -79,6 +95,6 @@ export class ContactService {
 
     newContact.id = originalContact.id;
     this.contacts[pos] = newContact;
-    this.contactListChangedEvent.next(this.contacts.slice());
+    this.storeContacts();
   }
 }

@@ -1,14 +1,16 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
 import { Document } from './document.model';
 import { MOCKDOCUMENTS } from './MOCKDOCUMENTS';
+import { FirebaseService } from '../shared/firebase.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DocumentService {
-  private documents: Document[];
+  private firebaseService = inject(FirebaseService);
+  private documents: Document[] = [];
   documentListChangedEvent = new Subject<Document[]>();
   private maxDocumentId: number;
 
@@ -18,8 +20,31 @@ export class DocumentService {
     this.maxDocumentId = this.getMaxId();
   }
 
-  getDocuments(): Document[] {
+  getDocuments() {
+    this.firebaseService.get<Document[]>('documents').subscribe(
+      (documents: Document[]) => {
+        this.documents = documents;
+        this.maxDocumentId = this.getMaxId();
+        this.documents.sort((a, b) => {
+          if (a.name < b.name) return -1;
+          if (a.name > b.name) return 1;
+          return 0;
+        });
+        this.listChanged();
+      },
+      (error: any) => {
+        console.log(error);
+      }
+    );
+  }
+
+  copyDocuments() {
     return this.documents.slice();
+  }
+
+  storeDocuments() {
+    this.firebaseService.put('documents', this.documents);
+    this.listChanged();
   }
 
   getDocument(id: string): Document | null {
@@ -40,7 +65,7 @@ export class DocumentService {
       return;
     }
     this.documents.splice(pos, 1);
-    this.listChanged();
+    this.storeDocuments();
   }
 
   getMaxId(): number {
@@ -64,7 +89,7 @@ export class DocumentService {
     this.maxDocumentId++;
     newDocument.id = this.maxDocumentId.toString();
     this.documents.push(newDocument);
-    this.listChanged();
+    this.storeDocuments();
   }
 
   updateDocument(originalDocument: Document, newDocument: Document) {
@@ -79,7 +104,7 @@ export class DocumentService {
 
     newDocument.id = originalDocument.id;
     this.documents[pos] = newDocument;
-    this.listChanged();
+    this.storeDocuments();
   }
   
   private listChanged() {

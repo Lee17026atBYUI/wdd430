@@ -21,6 +21,8 @@ import { NotFound } from './not-found/not-found';
 import { AppRoutingModule } from './app-routing.module';
 import { DocumentEdit } from './documents/document-edit/document-edit';
 import { ContactEdit } from './contacts/contact-edit/contact-edit';
+import { ContactsFilterPipe } from './contacts/contacts-filter.pipe';
+import { provideHttpClient } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -40,16 +42,18 @@ import { ContactEdit } from './contacts/contact-edit/contact-edit';
     DropdownDirective,
     NotFound,
     DocumentEdit,
-    ContactEdit
+    ContactEdit,
+    ContactsFilterPipe
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    DndModule
+    DndModule,
   ],
   providers: [
-    provideBrowserGlobalErrorListeners()
+    provideBrowserGlobalErrorListeners(),
+    provideHttpClient()
   ],
   bootstrap: [App]
 })

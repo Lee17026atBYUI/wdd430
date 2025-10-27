@@ -1,6 +1,7 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 import { Document } from '../document.model';
 import { DocumentService } from '../document.service';
@@ -15,6 +16,8 @@ export class DocumentEdit implements OnInit, OnDestroy {
   originalDocument: Document;
   document: Document;
   editMode: boolean = false;
+  private subscription: Subscription;
+  private id: string;
 
   private documentService = inject(DocumentService);
   private router = inject(Router);
@@ -40,15 +43,15 @@ export class DocumentEdit implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route.params.subscribe(
       (params: Params) => {
-        const id = params['id'];
+        this.id = params['id'];
 
         // check if we even got an id (we won't for new document mode)
-        if (id == null) {
+        if (this.id == null) {
           this.editMode = false;
           return;
         }
 
-        this.originalDocument = this.documentService.getDocument(id);
+        this.originalDocument = this.documentService.getDocument(this.id);
 
         // check if they passed in a fake id
         if (this.originalDocument == null) return;
@@ -59,10 +62,13 @@ export class DocumentEdit implements OnInit, OnDestroy {
       }
     );
     
+    this.subscription = this.documentService.documentListChangedEvent.subscribe((documents: Document[]) => {
+      this.document = this.documentService.getDocument(this.id);
+    });
   }
 
   ngOnDestroy(): void {
-    
+    this.subscription.unsubscribe();
   }
 
 }

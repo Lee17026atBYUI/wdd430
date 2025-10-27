@@ -1,12 +1,26 @@
 <div class="panel panel-default">
-  <div class="panel-heading" style="height: 55px">
-    <h3 class="pull-left" style="margin-top: 5px;">Contacts</h3>
-    <a routerLink="new" class="pull-right">
-      <button class="btn btn-success">New Contact</button>
-    </a>
+  <div class="panel-heading">
+    <div class="row">
+      <h3 class="pull-left" style="margin-top: 5px; margin-left: 5px">Contacts</h3>
+    </div>
+    <div class="row">
+      <div class="input-group pull-left pad-left-right col-xs-7" style="margin-left: 5px;">
+        <input type="text"
+        #searchBox
+        (keyup)="search(searchBox.value)"
+        class="form-control"
+        placeholder="Enter a search value"
+        >
+        <div class="glyphicon glyphicon-search input-group-addon" (click)="search(searchBox.value)" style="cursor: pointer;"></div>
+      </div>
+      <div class="pull-right pad-left-right" style="margin-right: 5px;">
+        <a class="btn btn-success" [routerLink]="['new']">New Contact</a>
+      </div>
+    </div>
   </div>
+
   <div class="panel-body">
-    @for (contact of contacts; track contact.id) {
+    @for (contact of contacts | contactsFilter : term; track contact.id) {
       <cms-contact-item 
       [contact]="contact" 
       [dndDraggable]="contact"

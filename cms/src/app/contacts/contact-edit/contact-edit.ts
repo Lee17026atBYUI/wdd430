@@ -1,7 +1,8 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { DndDropEvent } from 'ngx-drag-drop';
+import { Subscription } from 'rxjs';
 
 import { Contact } from '../contact.model';
 import { ContactService } from '../contact.service';
@@ -12,13 +13,14 @@ import { ContactService } from '../contact.service';
   templateUrl: './contact-edit.html',
   styleUrl: './contact-edit.css'
 })
-export class ContactEdit implements OnInit {
+export class ContactEdit implements OnInit, OnDestroy {
   originalContact: Contact;
   contact: Contact;
   groupContacts: Contact[] = [];
   editMode: boolean = false;
   id: string;
   invalidGroupContactAdd = false;
+  private subscription: Subscription;
 
   private contactService = inject(ContactService);
   private router = inject(Router);
@@ -46,6 +48,24 @@ export class ContactEdit implements OnInit {
         }
       }
     );
+
+    this.subscription = this.contactService.contactListChangedEvent.subscribe((contact: Contact[]) => {
+      if (this.id == null) {
+        this.editMode = false;
+        return;
+      }
+      this.originalContact = this.contactService.getContact(this.id);
+      if (this.originalContact == null) return;
+      this.editMode = true;
+      this.contact = this.cloneObject(this.originalContact);
+      if (this.contact?.group) {
+        this.groupContacts = this.cloneObject(this.contact.group);
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   private cloneObject(object) {
@@ -64,15 +84,16 @@ export class ContactEdit implements OnInit {
       value.email, 
       value.phone, 
       value.imageUrl, 
-      this.groupContacts);
+      this.groupContacts
+    );
 
-      if (this.editMode) {
-        this.contactService.updateContact(this.originalContact, newContact);
-      } else {
-        this.contactService.addContact(newContact);
-      }
+    if (this.editMode) {
+      this.contactService.updateContact(this.originalContact, newContact);
+    } else {
+      this.contactService.addContact(newContact);
+    }
 
-      this.onCancel();
+    this.onCancel();
   }
 
   onDrop(event: DndDropEvent) {

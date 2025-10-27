@@ -1,14 +1,17 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
 import { Message } from './message.model';
 import { MOCKMESSAGES } from './MOCKMESSAGES';
+import { FirebaseService } from '../shared/firebase.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MessageService {
-  private messages: Message[];
+  private firebaseService = inject(FirebaseService);
+
+  private messages: Message[] = [];
   messageChangedEvent = new Subject<Message[]>();
   private maxMessageId: number;
 
@@ -18,8 +21,23 @@ export class MessageService {
     this.maxMessageId = this.getMaxId();
   }
 
-  getMessages(): Message[] {
-    return this.messages.slice();
+  getMessages() {
+    this.firebaseService.get<Message[]>('messages').subscribe(
+      (messages: Message[]) => {
+        this.messages = messages;
+        this.maxMessageId = this.getMaxId();
+        this.messageChangedEvent.next(this.messages.slice());
+      },
+      (error: any) => {
+        console.log(error);
+      }
+    );
+    // return this.messages.slice();
+  }
+
+  storeMessages() {
+    this.firebaseService.put('messages', this.messages);
+    this.messageChangedEvent.next(this.messages.slice());
   }
 
   getMessage(id: string): Message | null {
@@ -39,7 +57,7 @@ export class MessageService {
     this.maxMessageId++;
     message.id = this.maxMessageId.toString();
     this.messages.push(message);
-    this.messageChangedEvent.next(this.messages.slice());
+    this.storeMessages();
   }
 
   getMaxId(): number {
