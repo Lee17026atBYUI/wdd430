@@ -63,7 +63,14 @@ export class DocumentEdit implements OnInit, OnDestroy {
     );
     
     this.subscription = this.documentService.documentListChangedEvent.subscribe((documents: Document[]) => {
-      this.document = this.documentService.getDocument(this.id);
+      if (this.id == null) {
+        this.editMode = false;
+        return;
+      }
+      this.originalDocument = this.documentService.getDocument(this.id);
+      if (this.originalDocument == null) return;
+      this.editMode = true;
+      this.document = JSON.parse(JSON.stringify(this.originalDocument));
     });
   }
 
