@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Document } from './document.model';
 import { MOCKDOCUMENTS } from './MOCKDOCUMENTS';
@@ -10,6 +11,7 @@ import { FirebaseService } from '../shared/firebase.service';
 })
 export class DocumentService {
   private firebaseService = inject(FirebaseService);
+  private http = inject(HttpClient);
   private documents: Document[] = [];
   documentListChangedEvent = new Subject<Document[]>();
   private maxDocumentId: number;
@@ -21,9 +23,13 @@ export class DocumentService {
   }
 
   getDocuments() {
-    this.firebaseService.get<Document[]>('documents').subscribe(
-      (documents: Document[]) => {
-        this.documents = documents;
+    // this.firebaseService.get<Document[]>('documents').subscribe(
+    this.firebaseService.get<{documents: Document[]}>('documents').subscribe(
+      (res) => {
+      // (documents: Document[]) => {
+        // console.log(documents);
+        // this.documents = documents;
+        this.documents = res.documents;
         this.maxDocumentId = this.getMaxId();
         this.documents.sort((a, b) => {
           if (a.name < b.name) return -1;
@@ -64,8 +70,20 @@ export class DocumentService {
     if (pos < 0) {
       return;
     }
-    this.documents.splice(pos, 1);
-    this.storeDocuments();
+
+    // delete from database
+    this.http.delete('http://localhost:3000/documents/' + document.id)
+      .subscribe(
+        (response: Response) => {
+          this.documents.splice(pos, 1);
+          // this.sortAndSend();
+          this.listChanged();
+        }
+      );
+
+
+    // this.documents.splice(pos, 1);
+    // this.storeDocuments();
   }
 
   getMaxId(): number {
@@ -86,10 +104,27 @@ export class DocumentService {
       return;
     }
 
-    this.maxDocumentId++;
-    newDocument.id = this.maxDocumentId.toString();
-    this.documents.push(newDocument);
-    this.storeDocuments();
+    newDocument.id = '';
+
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+
+    // add to database
+    this.http
+      .post<{ message: string; document: Document }>(
+        'http://localhost:3000/documents',
+        newDocument,
+        { headers: headers }
+      )
+      .subscribe((responseData) => {
+        // add new document to documents
+        this.documents.push(responseData.document);
+        this.documents.sort((a, b) => {
+          if (a.name < b.name) return -1;
+          if (a.name > b.name) return 1;
+          return 0;
+        });
+        this.listChanged();
+      });
   }
 
   updateDocument(originalDocument: Document, newDocument: Document) {
@@ -103,8 +138,28 @@ export class DocumentService {
     }
 
     newDocument.id = originalDocument.id;
-    this.documents[pos] = newDocument;
-    this.storeDocuments();
+    newDocument._id = originalDocument._id;
+    // this.documents[pos] = newDocument;
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    // update database
+    this.http
+      .put('http://localhost:3000/documents/' + originalDocument.id, newDocument, {
+        headers: headers,
+      })
+      .subscribe((response: Response) => {
+        this.documents[pos] = newDocument;
+        this.documents.sort((a, b) => {
+          if (a.name < b.name) return -1;
+          if (a.name > b.name) return 1;
+          return 0;
+        });
+        this.listChanged();
+      });
+
+
+    // this.storeDocuments();
   }
   
   private listChanged() {

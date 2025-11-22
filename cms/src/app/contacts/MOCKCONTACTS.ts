@@ -1,6 +1,6 @@
 import {Contact} from './contact.model';
 
-export const MOCKCONTACTS: Contact[] = [
+export const MOCKCONTACTS: any[] = [
   // individual contacts
   // index 0
   {
