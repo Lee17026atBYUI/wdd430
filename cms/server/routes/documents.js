@@ -46,6 +46,7 @@ router.post('/', (req, res, next) => {
 router.put('/:id', (req, res, next) => {
   Document.findOne({ id: req.params.id })
     .then((document) => {
+      // console.log('router put document', req.body);
       document.name = req.body.name;
       document.description = req.body.description;
       document.url = req.body.url;
