@@ -1,0 +1,10 @@
+<a [routerLink]="isClick ? speaker._id : null" routerLinkActive="active" class="list-group-item clearfix">
+  <div class="pull-left">
+    <h4 class="list-group-item-heading">{{ speaker.name }}</h4>
+    @if(speaker.lastSpoke) {
+      <h5>Last Spoke: {{ speaker.lastSpoke | date }}</h5>
+    } @else {
+      <h5>No record of previous speaking assignment.</h5>
+    }
+  </div>
+</a>

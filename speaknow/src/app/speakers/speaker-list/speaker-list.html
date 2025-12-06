@@ -1,0 +1,20 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="row">
+      <h3 class="pull-left" style="margin-top: 5px; margin-left: 5px">Speakers</h3>
+    </div>
+    <div class="row">
+      <div class="pull-right pad-left-right" style="margin-right: 5px;">
+        <a class="btn btn-success" [routerLink]="['new']">New Speaker</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel-body">
+    @for (speaker of speakers; track speaker._id) {
+      <speaknow-speaker-item 
+      [speaker]="speaker"
+      ></speaknow-speaker-item>
+    }
+  </div>
+</div>

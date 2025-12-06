@@ -1,0 +1,16 @@
+<div class="panel panel-default">
+  <div class="panel-heading" style="height: 105px">
+    <h4>{{speaker?.name}}</h4>
+    <div class="pull-right">
+      <a class="btn btn-primary" routerLink="edit">Edit</a>
+      <a class="btn btn-danger" (click)="onDelete()">Delete</a>
+    </div>
+  </div>
+  <div class="panel-body">
+    @if (speaker?.lastSpoke) {
+      <p><strong>Date Last Spoke:</strong> {{speaker?.lastSpoke | date}}</p>
+    } @else {
+      <p>We have no record of this member's most recent speaking assignment. Could be a long time ago. Could be never. Could be someone forgot to input it. Could be they always say no.</p>
+    }
+  </div>
+</div>

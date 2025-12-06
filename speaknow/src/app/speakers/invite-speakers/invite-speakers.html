@@ -1,0 +1,7 @@
+<h3>These are the people you can invite to give talks in Sacrament Meeting!</h3>
+@for (speaker of speakers; track speaker._id) {
+  <speaknow-speaker-item
+  [speaker]="speaker"
+  [isClick]="false"
+  ></speaknow-speaker-item>
+}

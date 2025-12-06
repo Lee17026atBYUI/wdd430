@@ -1,0 +1,56 @@
+<div class="panel panel-default">
+  <div class="panel-body">
+    <form id="speaker-edit" #f="ngForm" (ngSubmit)="onSubmit(f)">
+      <div class="row">
+        <div class="col-sm-12 form-group">
+          <label for="name">Name:</label>
+          <input 
+            type="text" 
+            name="name" 
+            [ngModel]="speaker?.name" 
+            #name="ngModel" 
+            required 
+            id="name"
+            class="form-control required"
+            minlength="3"
+          >
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12 form-group">
+          <label for="lastSpoke">Date Last Spoke:</label>
+          <p class="text-muted small">*Leave this blank if it's unknown.</p>
+          <input 
+            type="date" 
+            name="lastSpoke" 
+            [ngModel]="formatDate(speaker?.lastSpoke)" 
+            #lastSpoke="ngModel"
+            id="lastSpoke"
+            class="form-control"
+          >
+          <!-- <input 
+            type="date" 
+            name="lastSpoke2" 
+            [ngModel]="speaker?.lastSpoke.toISOString().split('T')[0]" 
+            #lastSpoke2="ngModel"
+            id="lastSpoke2"
+            class="form-control"
+          > -->
+        </div>
+      </div>
+
+      <!-- maybe error message here -->
+       @if (!name.valid) {
+        <div class="alert alert-danger">Name is required!</div>
+       }
+
+      <div class="row">
+        <div class="col-xs-12 btn-toolbar">
+          <button class="btn btn-success" [disabled]="!f.valid" type="submit">Save</button>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>
