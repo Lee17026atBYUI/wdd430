@@ -25,8 +25,19 @@ export class SpeakerEdit implements OnInit, OnDestroy {
 
   onSubmit(form: NgForm) {
     const value = form.value;
-    console.log(value);
+    const newSpeaker = new Speaker(
+      null,
+      value.name,
+      value.lastSpoke
+    );
 
+    if (this.editMode) {
+      this.speakerService.updateSpeaker(this.originalSpeaker, newSpeaker);
+    } else {
+      this.speakerService.addSpeaker(newSpeaker);
+    }
+
+    this.router.navigate(['/speakers']);
   }
 
   ngOnInit(): void {
@@ -45,7 +56,6 @@ export class SpeakerEdit implements OnInit, OnDestroy {
 
         this.editMode = true;
         this.speaker = {...this.originalSpeaker};
-        // console.log('speaker-edit init', this.speaker);
       }
     );
 
@@ -63,11 +73,6 @@ export class SpeakerEdit implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
-  }
-
-  formatDate(date: Date) {
-    if (!date) return;
-    return date.toISOString().split('T')[0];
   }
 
 }

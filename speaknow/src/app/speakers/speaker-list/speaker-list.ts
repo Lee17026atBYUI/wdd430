@@ -17,8 +17,7 @@ export class SpeakerList implements OnInit, OnDestroy {
   speakerSub: Subscription;
 
   ngOnInit(): void {
-    // console.log('spk list init');
-    this.speakers = this.speakerService.getSpeakers();
+    this.speakerService.getSpeakers();
 
     this.speakerSub = this.speakerService.speakerListChangedEvent.subscribe((speakerList: Speaker[]) => {
       this.speakers = speakerList;

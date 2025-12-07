@@ -24,26 +24,17 @@
           <input 
             type="date" 
             name="lastSpoke" 
-            [ngModel]="formatDate(speaker?.lastSpoke)" 
+            [ngModel]="speaker?.lastSpoke | date:'yyyy-MM-dd'" 
             #lastSpoke="ngModel"
             id="lastSpoke"
             class="form-control"
           >
-          <!-- <input 
-            type="date" 
-            name="lastSpoke2" 
-            [ngModel]="speaker?.lastSpoke.toISOString().split('T')[0]" 
-            #lastSpoke2="ngModel"
-            id="lastSpoke2"
-            class="form-control"
-          > -->
         </div>
       </div>
 
-      <!-- maybe error message here -->
-       @if (!name.valid) {
-        <div class="alert alert-danger">Name is required!</div>
-       }
+      @if (!name.valid) {
+      <div class="alert alert-danger">Name is required!</div>
+      }
 
       <div class="row">
         <div class="col-xs-12 btn-toolbar">

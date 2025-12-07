@@ -4,6 +4,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Speaker } from './speaker.model';
 
+const NJSURL = 'http://localhost:3000/speakers/';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -12,12 +14,12 @@ export class SpeakerService {
 
   private targetSpeakers = 4;
   speakers: Speaker[] = [
-    new Speaker('abc', 'Bob', new Date('2025-1-1')),
-    new Speaker('sdfg', 'Greg', new Date('2025-3-13')),
-    new Speaker('abdgc', 'Fred', new Date('2025-6-26')),
-    new Speaker('abgc', 'Mildred', new Date('2024-1-6')),
-    new Speaker('sdfhg', 'Adeline', new Date('2025-9-5')),
-    new Speaker('adfdfgc', 'Mabel'),
+    // new Speaker('abc', 'Bob', new Date('2025-1-1')),
+    // new Speaker('sdfg', 'Greg', new Date('2025-3-13')),
+    // new Speaker('abdgc', 'Fred', new Date('2025-6-26')),
+    // new Speaker('abgc', 'Mildred', new Date('2024-1-6')),
+    // new Speaker('sdfhg', 'Adeline', new Date('2025-9-5')),
+    // new Speaker('adfdfgc', 'Mabel'),
   ];
   inviteSpeakers: Speaker[] = [
     // new Speaker('abc', 'Bob', new Date('2025-1-1')),
@@ -26,26 +28,26 @@ export class SpeakerService {
   speakerListChangedEvent = new Subject<Speaker[]>();
   inviteSpeakersListChangedEvent = new Subject<Speaker[]>();
 
-  getSpeakers(): Speaker[] {
-    // console.log(this.speakers);
-    this.speakerListChangedEvent.next(this.speakers.slice());
-
-    return this.speakers.slice();
+  getSpeakers() {
+    this.http.get<{speakers: Speaker[]}>(NJSURL).subscribe((res) => {
+      this.speakers = res.speakers;
+      this.speakerListChangedEvent.next(this.speakers.slice());
+      this.getInvite();
+    });
   }
 
   getSpeaker(id: string): Speaker | null {
     for (const speaker of this.speakers) {
       if (speaker._id === id) {
-        // console.log('getSpeaker', speaker);
         return speaker;
       }
     }
-    // console.log('nada');
     return null;
   }
 
   getInvite(): Speaker[] {
     this.findSpeakers();
+    this.inviteSpeakersListChangedEvent.next(this.inviteSpeakers.slice());
     return this.inviteSpeakers.slice();;
   }
 
@@ -54,10 +56,8 @@ export class SpeakerService {
     this.inviteSpeakers = [];
 
     // just grab people that never spoke (no date)
-    // console.log(this.speakers);
     for (let i = 0; i < this.speakers.length; i++) {
-      if (this.speakers[i].lastSpoke === undefined) {
-        // console.log(this.speakers[i]);
+      if (this.speakers[i].lastSpoke === undefined || this.speakers[i].lastSpoke == null) {
         this.inviteSpeakers.push({ ...this.speakers[i] });
         numSpeakers++;
         if (numSpeakers >= this.targetSpeakers) {
@@ -68,13 +68,11 @@ export class SpeakerService {
 
     // sort remaining speakers by date
     let copySpeakers = this.speakers.filter((speaker) => speaker.lastSpoke);
-    // console.log(copySpeakers);
     copySpeakers.sort((a, b) => {
       if (a.lastSpoke < b.lastSpoke) return -1;
       if (a.lastSpoke > b.lastSpoke) return 1;
       return 0;
     });
-    // console.log(copySpeakers);
 
     // then grab from the furthest date if we don't have enough
     for (let i = 0; i < copySpeakers.length; i++) {
@@ -95,6 +93,34 @@ export class SpeakerService {
       return;
     }
 
-    // call DELETE
+    this.http.delete(NJSURL + speaker._id).subscribe(res => {
+      this.speakers.splice(pos, 1);
+      this.speakerListChangedEvent.next(this.speakers.slice());
+    })
+  }
+
+  updateSpeaker(originalSpeaker: Speaker, newSpeaker: Speaker) {
+    if (originalSpeaker == null || newSpeaker == null) return;
+
+    const pos = this.speakers.indexOf(originalSpeaker);
+    if (pos < 0) return;
+
+    newSpeaker._id = originalSpeaker._id;
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    this.http.put<{ message: string }>(NJSURL + originalSpeaker._id, newSpeaker, {headers: headers}).subscribe((responseData) => {
+      this.speakers[pos] = newSpeaker;
+      this.speakerListChangedEvent.next(this.speakers.slice());
+    });
+    
+  }
+
+  addSpeaker(newSpeaker: Speaker) {
+    if (newSpeaker == null) return;
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    this.http.post<{ message: string; speaker: Speaker}>(NJSURL, newSpeaker, {headers: headers}).subscribe((responseData) => {
+      this.speakers.push(responseData.speaker);
+      this.speakerListChangedEvent.next(this.speakers.slice());
+    });
   }
 }
