@@ -80,8 +80,9 @@ app.put('/speakers/:id', (req, res, next) => {
 
       Speaker.updateOne({ _id: req.params.id }, speaker)
         .then((result) => {
-          res.status(200).json({
-            message: 'Speaker updated.',
+          Speaker.find()
+          .then((speakers) => {
+            res.status(200).json({ speakers: speakers });
           });
         })
         .catch((err) => {

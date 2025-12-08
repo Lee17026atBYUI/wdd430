@@ -6,5 +6,7 @@
     } @else {
       <h5>No record of previous speaking assignment.</h5>
     }
+    <button class="btn btn-success" *ngIf="!isClick" (click)="onClick()">They Spoke!</button>
+    <button class="btn btn-warning" *ngIf="!isClick" (click)="onClick(3)">Bump</button>
   </div>
 </a>

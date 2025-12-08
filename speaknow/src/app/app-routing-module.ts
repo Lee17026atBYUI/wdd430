@@ -6,12 +6,14 @@ import { Speakers } from './speakers/speakers';
 import { SpeakerEdit } from './speakers/speaker-edit/speaker-edit';
 import { SpeakerDetail } from './speakers/speaker-detail/speaker-detail';
 import { InviteSpeakers } from './speakers/invite-speakers/invite-speakers';
+import { About } from './about/about';
 
 const routes: Routes = [
-  {path: '', redirectTo: '/speakers', pathMatch: 'full'},
+  {path: '', redirectTo: '/speakers/about', pathMatch: 'full'},
   {path: 'speakers', component: Speakers, children: [
     {path: 'invite', component: InviteSpeakers},
     {path: 'new', component: SpeakerEdit},
+    {path: 'about', component: About},
     {path: ':id', component: SpeakerDetail},
     {path: ':id/edit', component: SpeakerEdit},
   ]},

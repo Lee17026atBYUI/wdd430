@@ -13,6 +13,7 @@ import { SpeakerItem } from './speakers/speaker-item/speaker-item';
 import { SpeakerList } from './speakers/speaker-list/speaker-list';
 import { NotFound } from './not-found/not-found';
 import { InviteSpeakers } from './speakers/invite-speakers/invite-speakers';
+import { About } from './about/about';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { InviteSpeakers } from './speakers/invite-speakers/invite-speakers';
     SpeakerItem,
     SpeakerList,
     NotFound,
-    InviteSpeakers
+    InviteSpeakers,
+    About
   ],
   imports: [
     BrowserModule,

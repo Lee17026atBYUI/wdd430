@@ -102,14 +102,12 @@ export class SpeakerService {
   updateSpeaker(originalSpeaker: Speaker, newSpeaker: Speaker) {
     if (originalSpeaker == null || newSpeaker == null) return;
 
-    const pos = this.speakers.indexOf(originalSpeaker);
-    if (pos < 0) return;
-
     newSpeaker._id = originalSpeaker._id;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    this.http.put<{ message: string }>(NJSURL + originalSpeaker._id, newSpeaker, {headers: headers}).subscribe((responseData) => {
-      this.speakers[pos] = newSpeaker;
+    this.http.put<{ speakers: Speaker[] }>(NJSURL + originalSpeaker._id, newSpeaker, {headers: headers}).subscribe((responseData) => {
+      this.speakers = responseData.speakers;
       this.speakerListChangedEvent.next(this.speakers.slice());
+      this.getInvite();
     });
     
   }
